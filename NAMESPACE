@@ -2,5 +2,6 @@
 
 export(ks_map)
 export(mlm_ss)
+export(t_table)
 import(dplyr)
 import(maps)
