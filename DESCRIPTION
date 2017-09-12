@@ -3,7 +3,7 @@ Title: A Number of Miscellaneous Functions That I Find Useful
 Version: 0.0.0.9000
 Authors@R: person("Mark", "White", email = "markhwhiteii@gmail.com", role = c("aut", "cre"))
 Description: This package contains a number of miscellaneous functions that I have made to replace sections of code that I generally copy, paste, replace a lot.
-Depends: R (>= 3.4.1)
+Depends: R (>= 3.3.2)
 License: MIT
 Encoding: UTF-8
 LazyData: true
