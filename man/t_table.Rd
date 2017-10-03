@@ -19,3 +19,12 @@ t_table(data, dvs, iv, varequal = TRUE)
 This function generates a table that includes variable names, means and standard deviations for each condition,
 t-value and p-value, degrees of freedom, and Cohen's d with confidence intervals.
 }
+\examples{
+data <- data.frame(
+  a = c(rnorm(50, 0, 2), rnorm(50, 1, 2)),
+  b = c(rnorm(50, 0, 2), rnorm(50, 1, 2)),
+  c = c(rnorm(50, 0, 2), rnorm(50, 1, 2)),
+  d = factor(c(rep("cond_0", 50), rep("cond_1", 50)))
+)
+t_table(data = data, dvs = c("a", "b", "c"), iv = "d")
+}

@@ -7,6 +7,14 @@
 #' @param dvs A variable name (or list of variable names) that are to be used as dependent variables.
 #' @param iv A variable name for the condition. The corresponding variable in the data.frame should be a factor with two levels.
 #' @param varequal A boolean value for if variances should be assumed to be equal across conditions or not.
+#' @examples
+#' data <- data.frame(
+#'   a = c(rnorm(50, 0, 2), rnorm(50, 1, 2)),
+#'   b = c(rnorm(50, 0, 2), rnorm(50, 1, 2)),
+#'   c = c(rnorm(50, 0, 2), rnorm(50, 1, 2)),
+#'   d = factor(c(rep("cond_0", 50), rep("cond_1", 50)))
+#' )
+#' t_table(data = data, dvs = c("a", "b", "c"), iv = "d")
 #' @export
 t_table <- function(data, dvs, iv, varequal=TRUE) {
   data <- as.data.frame(data)
