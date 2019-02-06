@@ -2,7 +2,7 @@
 % Please edit documentation in R/cross_tab.R
 \name{cross_tab}
 \alias{cross_tab}
-\title{Make Cross Tabulations, Possible with Weights, and Return as Tidy Data Frame}
+\title{Make Cross Tabulations, Possibly with Weights, and Return as Tidy Data Frame}
 \usage{
 cross_tab(data, out, preds = NULL, wt = NULL, form = c("t", "p"))
 }
