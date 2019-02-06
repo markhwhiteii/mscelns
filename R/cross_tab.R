@@ -13,7 +13,7 @@
 #' pretty (presentation).
 #' @return A tibble of counts and proportions of out, perhaps at numerous levels
 #' or combinations of levels of preds.
-#' @example 
+#' @examples 
 #' set.seed(1839)
 #' n <- 500
 #' w <- rgamma(n, 1)
