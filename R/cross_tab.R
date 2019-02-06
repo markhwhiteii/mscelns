@@ -1,4 +1,4 @@
-#' Make Cross Tabulations, Possible with Weights, and Return as Tidy Data Frame
+#' Make Cross Tabulations, Possibly with Weights, and Return as Tidy Data Frame
 #' 
 #' Behaves very similarly to the descr::crosstab function, but it does not round
 #' weighted group sizes to the nearest whole number.  Other CrossTab functions 
