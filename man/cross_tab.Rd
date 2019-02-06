@@ -9,7 +9,7 @@ cross_tab(data, out, preds = NULL, wt = NULL, form = c("t", "p"))
 \arguments{
 \item{data}{A data.frame or tibble.}
 
-\item{out}{Output variable name, as string.}
+\item{out}{Outcome variable name, as string.}
 
 \item{preds}{Vector of predictor variable names, as string.}
 

@@ -6,7 +6,7 @@
 #' chain to do so.
 #' 
 #' @param data A data.frame or tibble.
-#' @param out Output variable name, as string.
+#' @param out Outcome variable name, as string.
 #' @param preds Vector of predictor variable names, as string.
 #' @param wt Weight variable name, as string.
 #' @param form Format of resulting tibble. t for tidy (data analysis) or p for 
