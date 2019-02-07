@@ -34,7 +34,7 @@
 #' )
 #' get_weights(data, targets)
 #' @export
-get_weights <- function(data, targets, na_warn = TRUE) {
+get_weights <- function(data, targets, na_warn = TRUE, ...) {
   
   if (!is.double(targets[[3]])) {
     stop("targets third column must be double, containing population margins.")
