@@ -4,7 +4,7 @@
 \alias{get_weights}
 \title{Get Rake Weights, Given Data and Target Population Margins}
 \usage{
-get_weights(data, targets, na_warn = TRUE)
+get_weights(data, targets, na_warn = TRUE, ...)
 }
 \arguments{
 \item{data}{Individual-level data.frame. Each row is unit of observation,
