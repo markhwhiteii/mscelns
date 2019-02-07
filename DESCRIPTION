@@ -13,5 +13,6 @@ Imports:
     maps (>= 3.2.0),
     dplyr (>= 0.7.2),
     tidyr (>= 0.6.3),
-    MBESS (>= 4.3.0)
+    MBESS (>= 4.3.0),
+    survey (>= 3.35-1)
 RoxygenNote: 6.1.1
