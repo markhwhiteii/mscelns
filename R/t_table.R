@@ -1,56 +1,74 @@
-#' Produce t-test summary with means, standard deviations, statistics, Cohen's d, and confidence intervals
+#' Make a Summary Table of Multiple t-tests
 #'
-#' This function generates a table that includes variable names, means and standard deviations for each condition,
-#' t-value and p-value, degrees of freedom, and Cohen's d with confidence intervals.
+#' TGenerates a table that includes variable names, means and standard 
+#' deviations for each condition, t-value and p-value, degrees of 
+#' freedom, and Cohen's d with confidence intervals.
 #' 
-#' @param data A data frame.
-#' @param dvs A variable name (or list of variable names) that are to be used as dependent variables.
-#' @param iv A variable name for the condition. The corresponding variable in the data.frame should be a factor with two levels.
-#' @param varequal A boolean value for if variances should be assumed to be equal across conditions or not.
+#' @param data A data.frame.
+#' @param dvs String. Variable name(s) of the dependent variables.
+#' @param iv String. Variable name for the independent variable.
+#' @param var_equal Logical. Assumed equal variance across conditions?
+#' @param p_adj String. p-value adjustment to be done. Passed to p.adjust. See
+#'   ?p.adjust.methods for more details. Note that p-values are adjusted, but
+#'   the confidence intervals for Cohen's d are NOT.
 #' @examples
+#' set.seed(1839)
 #' data <- data.frame(
 #'   a = c(rnorm(50, 0, 2), rnorm(50, 1, 2)),
 #'   b = c(rnorm(50, 0, 2), rnorm(50, 1, 2)),
 #'   c = c(rnorm(50, 0, 2), rnorm(50, 1, 2)),
-#'   d = factor(c(rep("cond_0", 50), rep("cond_1", 50)))
+#'   d = factor(c(rep("cond 0", 50), rep("cond 1", 50)))
 #' )
 #' t_table(data = data, dvs = c("a", "b", "c"), iv = "d")
 #' @export
-t_table <- function(data, dvs, iv, varequal=TRUE) {
-  data <- as.data.frame(data)
-  rows <- length(dvs)
+t_table <- function(data, dvs, iv, var_equal = TRUE, p_adj = "none") {
   
-  results <- data.frame(variable=rep(NA,rows), cond1_m=rep(NA,rows),
-                        cond1_sd=rep(NA,rows), cond2_m=rep(NA,rows),
-                        cond2_sd=rep(NA,rows), t=rep(NA,rows), 
-                        p_value=rep(NA,rows), df=rep(NA,rows), 
-                        d=rep(NA,rows), d_lb=rep(NA,rows), d_ub=rep(NA,rows))
-  
-  for (i in 1:length(dvs)) {
-    dv <- data[,dvs[i]]
-    cond <- data[,iv]
-    t_obj <- t.test(dv ~ cond, var.equal=varequal)
-    
-    results$variable[i] <- dvs[i]
-  
-    results$cond1_m[i] <- round(tapply(dv, cond, mean, na.rm=TRUE)[[1]],2)
-    results$cond1_sd[i] <- round(tapply(dv, cond, sd, na.rm=TRUE)[[1]],2)
-    results$cond2_m[i] <- round(tapply(dv, cond, mean, na.rm=TRUE)[[2]],2)
-    results$cond2_sd[i] <- round(tapply(dv, cond, sd, na.rm=TRUE)[[2]],2)
-    
-    results$t[i] <- round(unname(t_obj$statistic),2)
-    results$p_value[i] <- t_obj$p.value
-    results$df[i] <- unname(t_obj$parameter)
-    
-    es <- MBESS::ci.smd(ncp=unname(t_obj$statistic), n.1=table(cond)[[1]], n.2=table(cond)[[2]])
-    results$d[i] <- round(es$smd,2)
-    results$d_lb[i] <- round(es$Lower.Conf.Limit.smd,2)
-    results$d_ub[i] <- round(es$Upper.Conf.Limit.smd,2)
+  if (!inherits(data, "data.frame")) {
+    stop("data must be a data.frame")
   }
-  names(results)[2] <- paste0(levels(cond)[1], "_m")
-  names(results)[3] <- paste0(levels(cond)[1], "_sd")
-  names(results)[4] <- paste0(levels(cond)[2], "_m")
-  names(results)[5] <- paste0(levels(cond)[2], "_sd")
   
-  return(results)
+  if (!all(c(dvs, iv) %in% names(data))) {
+    stop("at least one column given in dvs and iv are not in the data")
+  }
+  
+  if (!all(sapply(data[, dvs], is.numeric))) {
+    stop("all dvs must be numeric")
+  }
+  
+  if (length(unique(na.omit(data[[iv]]))) != 2) {
+    stop("independent variable must only have two unique values")
+  }
+  
+  out <- lapply(dvs, function(x) {
+    
+    tres <- t.test(data[[x]] ~ data[[iv]], var.equal = var_equal)
+    
+    mns <- tapply(data[[x]], data[[iv]], mean, na.rm = TRUE)
+    names(mns) <- paste0(names(mns), "_m")
+    
+    sds <- tapply(data[[x]], data[[iv]], sd, na.rm = TRUE)
+    names(sds) <- paste0(names(sds), "_sd")
+    
+    es <- MBESS::ci.smd(ncp = tres$statistic, 
+                        n.1 = table(data[[iv]])[[1]], 
+                        n.2 = table(data[[iv]])[[2]])
+    
+    c(
+      c(mns[1], sds[1], mns[2], sds[2]),
+      tres$statistic,
+      tres$parameter,
+      p = tres$p.value,
+      d = unname(es$smd),
+      d_lb = es$Lower,
+      d_ub = es$Upper
+    )
+  })
+  
+  out <- as.data.frame(do.call(rbind, out))
+  out <- cbind(variable = dvs, out)
+  names(out) <- gsub("\\s", "_", names(out))
+  
+  out$p <- p.adjust(out$p, p_adj)
+  
+  return(out)
 }
